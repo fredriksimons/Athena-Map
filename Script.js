@@ -1,8 +1,8 @@
 function initMap() {
     // Initialize the map
     const map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: 51.9058, lng: -2.0796 }, // Initial center
-        zoom: 17,  // Initial zoom level
+        center: { lat: 51.9058, lng: -2.0796 }, // Coordinates for Francis Close Hall Campus, Cheltenham
+        zoom: 17,  // Zoom level set to 17
         mapId: '9c30f2b062cb57db' // Your Map ID
     });
 
@@ -22,10 +22,10 @@ function initMap() {
         anchor: new google.maps.Point(20, 40) // Anchor the icon at the bottom center
     };
 
-    // Create a bounds object to adjust the map to show all markers
+    // Define the bounds object
     const bounds = new google.maps.LatLngBounds();
 
-    // Add markers with custom icons and flexible bounds
+    // Add markers with custom icons and extend bounds to include them all
     const locations = [
         { lat: 51.90589663784391, lng: -2.082536341284594, title: "24 Granville Street, Cheltenham" },
         { lat: 51.905102, lng: -2.079061, title: "5 St Pauls Lane, Cheltenham" },
@@ -40,22 +40,27 @@ function initMap() {
             icon: houseIcon,
             animation: google.maps.Animation.DROP
         });
-        
-        // Extend the bounds object with each marker's position
-        bounds.extend(marker.getPosition());
+        bounds.extend(marker.position); // Extend bounds to include each marker
     });
 
-    // Add the marker for the university
+    // Add a marker for the university and extend bounds
     const universityMarker = new google.maps.Marker({
         position: { lat: 51.90535186167893, lng: -2.0799602197702884 }, // Coordinates for Francis Close Hall Campus
         map: map,
         title: "Francis Close Hall Campus",
         icon: universityIcon
     });
-    
-    // Extend the bounds object with the university marker's position
-    bounds.extend(universityMarker.getPosition());
+    bounds.extend(universityMarker.position); // Extend bounds to include the university marker
 
-    // Fit the map to the bounds to ensure all markers are visible
-    map.fitBounds(bounds);
+    // Adjust the map's zoom and center only if necessary
+    google.maps.event.addListenerOnce(map, 'bounds_changed', function() {
+        const currentZoom = map.getZoom();
+        map.fitBounds(bounds);
+
+        // Ensure zoom doesn't exceed the original set zoom level
+        if (map.getZoom() > currentZoom) {
+            map.setZoom(currentZoom);
+        }
+    });
 }
+
