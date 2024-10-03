@@ -3,7 +3,7 @@ function initMap() {
     const map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 51.9058, lng: -2.0796 }, // Coordinates for Francis Close Hall Campus, Cheltenham
         zoom: 17,  // Zoom level set to 17
-        mapId: '9c30f2b062cb57db' // Your new Map ID
+        mapId: '9c30f2b062cb57db' // Your Map ID
     });
 
     // Define the custom house icon
@@ -22,7 +22,10 @@ function initMap() {
         anchor: new google.maps.Point(20, 40) // Anchor the icon at the bottom center
     };
 
-    // Add markers with custom icons and animation for properties
+    // Define the bounds object
+    const bounds = new google.maps.LatLngBounds();
+
+    // Add markers with custom icons and extend bounds to include them all
     const locations = [
         { lat: 51.90589663784391, lng: -2.082536341284594, title: "24 Granville Street, Cheltenham" },
         { lat: 51.905102, lng: -2.079061, title: "5 St Pauls Lane, Cheltenham" },
@@ -30,20 +33,33 @@ function initMap() {
     ];
 
     locations.forEach(location => {
-        new google.maps.Marker({
+        const marker = new google.maps.Marker({
             position: { lat: location.lat, lng: location.lng },
-            map: map, // Reference to the initialized map
+            map: map,
             title: location.title,
-            icon: houseIcon, // Use the custom house icon
-            animation: google.maps.Animation.DROP // Apply animation
+            icon: houseIcon,
+            animation: google.maps.Animation.DROP
         });
+        bounds.extend(marker.position); // Extend bounds to include each marker
     });
 
-    // Add a marker for the university with the university icon
-    new google.maps.Marker({
+    // Add a marker for the university and extend bounds
+    const universityMarker = new google.maps.Marker({
         position: { lat: 51.90535186167893, lng: -2.0799602197702884 }, // Coordinates for Francis Close Hall Campus
-        map: map, // Reference to the initialized map
+        map: map,
         title: "Francis Close Hall Campus",
-        icon: universityIcon // Use the custom university icon
+        icon: universityIcon
+    });
+    bounds.extend(universityMarker.position); // Extend bounds to include the university marker
+
+    // Adjust the map's zoom and center only if necessary
+    google.maps.event.addListenerOnce(map, 'bounds_changed', function() {
+        const currentZoom = map.getZoom();
+        map.fitBounds(bounds);
+
+        // Ensure zoom doesn't exceed the original set zoom level
+        if (map.getZoom() > currentZoom) {
+            map.setZoom(currentZoom);
+        }
     });
 }
