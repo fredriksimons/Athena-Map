@@ -25,7 +25,7 @@ function initMap() {
     // Define the bounds object
     const bounds = new google.maps.LatLngBounds();
 
-    // Add markers with custom icons and extend bounds to include them all
+    // Add markers with custom icons and drop animation
     const locations = [
         { lat: 51.90589663784391, lng: -2.082536341284594, title: "24 Granville Street, Cheltenham" },
         { lat: 51.905102, lng: -2.079061, title: "5 St Pauls Lane, Cheltenham" },
@@ -33,23 +33,25 @@ function initMap() {
     ];
 
     locations.forEach(location => {
-        const marker = new google.maps.marker.AdvancedMarkerElement({
+        const marker = new google.maps.Marker({
             position: { lat: location.lat, lng: location.lng },
             map: map,
             title: location.title,
-            icon: houseIcon
+            icon: houseIcon,
+            animation: google.maps.Animation.DROP
         });
-        bounds.extend(new google.maps.LatLng(location.lat, location.lng)); // Extend bounds to include each marker
+        bounds.extend(marker.getPosition()); // Extend bounds to include each marker
     });
 
-    // Add a marker for the university and extend bounds
-    const universityMarker = new google.maps.marker.AdvancedMarkerElement({
+    // Add a marker for the university
+    const universityMarker = new google.maps.Marker({
         position: { lat: 51.90535186167893, lng: -2.0799602197702884 }, // Coordinates for Francis Close Hall Campus
         map: map,
         title: "Francis Close Hall Campus",
-        icon: universityIcon
+        icon: universityIcon,
+        animation: google.maps.Animation.DROP
     });
-    bounds.extend(new google.maps.LatLng(51.90535186167893, -2.0799602197702884)); // Extend bounds to include the university marker
+    bounds.extend(universityMarker.getPosition()); // Extend bounds to include the university marker
 
     // Adjust the map's zoom and center only if necessary
     google.maps.event.addListenerOnce(map, 'bounds_changed', function() {
