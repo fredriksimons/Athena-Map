@@ -63,4 +63,11 @@ function initMap() {
             map.setZoom(currentZoom);
         }
     });
+
+    // Extra padding for desktop screens
+    google.maps.event.addListenerOnce(map, 'idle', function() {
+        if (window.innerWidth > 768) {  // Check if the screen width is greater than 768px
+            map.panBy(-100, 0);  // Pan the map to the left to recenter university on desktop
+        }
+    });
 }
