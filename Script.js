@@ -9,20 +9,19 @@ function initMap() {
     // Define the custom house icon
     const houseIcon = {
         url: 'House Icon.png', // Path to your house icon image
-        scaledSize: new google.maps.Size(40, 40), // Size of the icon
-        origin: new google.maps.Point(0, 0), // Origin of the image
-        anchor: new google.maps.Point(20, 40) // Anchor the icon at the bottom center
+        scaledSize: new google.maps.Size(40, 40),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(20, 40)
     };
 
     // Define the custom university icon
     const universityIcon = {
         url: 'University Icon.png', // Path to your university icon image
-        scaledSize: new google.maps.Size(40, 40), // Size of the icon
-        origin: new google.maps.Point(0, 0), // Origin of the image
-        anchor: new google.maps.Point(20, 40) // Anchor the icon at the bottom center
+        scaledSize: new google.maps.Size(40, 40),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(20, 40)
     };
 
-    // Define the bounds object
     const bounds = new google.maps.LatLngBounds();
 
     // Add markers with custom icons and drop animation
@@ -40,34 +39,32 @@ function initMap() {
             icon: houseIcon,
             animation: google.maps.Animation.DROP
         });
-        bounds.extend(marker.getPosition()); // Extend bounds to include each marker
+        bounds.extend(marker.getPosition());
     });
 
-    // Add a marker for the university
     const universityMarker = new google.maps.Marker({
-        position: { lat: 51.90535186167893, lng: -2.0799602197702884 }, // Coordinates for Francis Close Hall Campus
+        position: { lat: 51.90535186167893, lng: -2.0799602197702884 },
         map: map,
         title: "Francis Close Hall Campus",
         icon: universityIcon,
         animation: google.maps.Animation.DROP
     });
-    bounds.extend(universityMarker.getPosition()); // Extend bounds to include the university marker
+    bounds.extend(universityMarker.getPosition());
 
-    // Adjust the map's zoom and center only if necessary
     google.maps.event.addListenerOnce(map, 'bounds_changed', function() {
         const currentZoom = map.getZoom();
         map.fitBounds(bounds);
-
-        // Ensure zoom doesn't exceed the original set zoom level
         if (map.getZoom() > currentZoom) {
             map.setZoom(currentZoom);
         }
     });
 
-    // Extra padding for desktop screens
     google.maps.event.addListenerOnce(map, 'idle', function() {
-        if (window.innerWidth > 768) {  // Check if the screen width is greater than 768px
-            map.panBy(-100, 0);  // Pan the map to the left to recenter university on desktop
+        if (window.innerWidth > 768) {
+            map.panBy(-100, 0);
         }
     });
 }
+
+// Attach the function to the window object to make it globally available
+window.initMap = initMap;
